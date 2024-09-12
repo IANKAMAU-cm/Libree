@@ -1,0 +1,52 @@
+{% extends 'layout.html' %}
+
+{% block content %}
+<div class="container-fluid">
+    <div class="row">
+        <!-- Sidebar -->
+        <nav id="sidebar" class="col-md-3 col-lg-2 d-md-block bg-light sidebar">
+            <div class="position-sticky">
+                <ul class="nav flex-column">
+                    <li class="nav-item">
+                        <a class="nav-link active" href="{{ url_for('list_books') }}">
+                            Book Management
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{url_for('manage_members') }}">Manage Members</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{url_for('book_loans') }}">Book Lending</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">Reports</a>
+                    </li>
+                </ul>
+            </div>
+        </nav>
+
+        <!-- Main content -->
+        <main class="col-md-9 col-lg-10 ml-sm-auto px-md-4">
+            <!-- Header with Search and Logout -->
+            <div class="d-flex justify-content-between align-items-center pt-3 pb-2 mb-3 border-bottom">
+                <h1 class="h2">Dashboard</h1>
+                <div class="d-flex">
+                    <!-- Search Bar -->
+                    <form class="form-inline my-2 my-lg-0 mr-3">
+                        <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">
+                        <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
+                    </form>
+                    <!-- Logout Button -->
+                    <a href="{{ url_for('logout') }}" class="btn">Logout</a>
+                </div>
+            </div>
+
+            <!-- Dashboard main content area -->
+            <div class="content-area">
+                <h3>Overview</h3>
+                <p>This is the content area where graphs, stats, and other information will be displayed.</p>
+            </div>
+        </main>
+    </div>
+</div>
+{% endblock %}

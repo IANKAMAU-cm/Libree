@@ -1,0 +1,42 @@
+{% extends "layout.html" %}
+
+{% block content %}
+<div class="container">
+    <h2>Member Registration</h2>
+    <form method="POST" action="{{ url_for('mregister') }}">
+        {{ form.hidden_tag() }} <!-- This ensures CSRF protection -->
+
+        <div class="form-group">
+            {{ form.username.label(class="form-label") }}
+            {{ form.username(class="form-control") }}
+            {% if form.username.errors %}
+                <div class="alert alert-danger">
+                    {{ form.username.errors[0] }}
+                </div>
+            {% endif %}
+        </div>
+
+        <div class="form-group">
+            {{ form.password.label(class="form-label") }}
+            {{ form.password(class="form-control") }}
+            {% if form.password.errors %}
+                <div class="alert alert-danger">
+                    {{ form.password.errors[0] }}
+                </div>
+            {% endif %}
+        </div>
+
+        <div class="form-group">
+            {{ form.confirm_password.label(class="form-label") }}
+            {{ form.confirm_password(class="form-control") }}
+            {% if form.confirm_password.errors %}
+                <div class="alert alert-danger">
+                    {{ form.confirm_password.errors[0] }}
+                </div>
+            {% endif %}
+        </div>
+
+        {{ form.submit(class="btn btn-primary") }}
+    </form>
+</div>
+{% endblock %}

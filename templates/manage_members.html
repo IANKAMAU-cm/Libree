@@ -1,0 +1,6 @@
+{% for member in members %}
+    <tr>
+        <td>{{ member.username }}</td>
+        <td><a href="{{ url_for('librarian_member_loans', member_id=member.id) }}">View Borrowing History</a></td>
+    </tr>
+{% endfor %}

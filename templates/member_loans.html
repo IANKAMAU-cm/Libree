@@ -1,0 +1,35 @@
+{% extends "layout.html" %}
+
+{% block content %}
+<div class="container">
+    <h2>Loans for {{ member.username }}</h2>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Book Title</th>
+                <th>Borrow Date</th>
+                <th>Due Date</th>
+                <th>Return Date</th>
+                <th>Status</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for loan in loans %}
+            <tr class="{% if loan.status == 'overdue' %}table-danger{% endif %}">
+                <td>{{ loan.book.title }}</td>
+                <td>{{ loan.borrow_date.strftime('%Y-%m-%d') }}</td>
+                <td>{{ loan.due_date.strftime('%Y-%m-%d') }}</td>
+                <td>
+                    {% if loan.return_date %}
+                        {{ loan.return_date.strftime('%Y-%m-%d') }}
+                    {% else %}
+                        Not Returned
+                    {% endif %}
+                </td>
+                <td>{{ loan.status }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

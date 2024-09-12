@@ -1,0 +1,58 @@
+{% extends 'layout.html' %}
+
+{% block content %}
+<div class="container">
+    <div class="dlink" style="padding-top: 20px;">
+        <!-- Link to navigate back to the dashboard -->
+        <a href="{{ url_for('dashboard') }}" class="btn btn-primary mb-3">Dashboard</a>
+    </div>
+    <div class="d-flex justify-content-between align-items-center">
+        <h2>Book List</h2>
+        <!-- Add Book Button -->
+        <a href="{{ url_for('add_book') }}" class="btn btn-primary">Add New Book</a>
+    </div>
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Picture</th>
+                <th>Title</th>
+                <th>Author</th>
+                <th>ISBN</th>
+                <th>Genre</th>
+                <th>Description</th>
+                <th>Publish Year</th>
+                <th>Available Quantity</th>
+                <th>Total Quantity</th>
+                <th>Shelf</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for book in books %}
+            <tr>
+                <td>
+                    {% if book.picture %}
+                    <img src="{{ url_for('static', filename='uploads/' + book.picture) }}" alt="{{ book.title }}" width="100">
+                    {% else %}
+                    No image
+                    {% endif %}
+                </td>
+                <td>{{ book.title }}</td>
+                <td>{{ book.author }}</td>
+                <td>{{ book.isbn }}</td>
+                <td>{{ book.genre }}</td>
+                <td>{{ book.description }}</td>
+                <td>{{ book.publication_year }}</td>
+                <td>{{ book.available_quantity }}</td>
+                <td>{{ book.total_quantity }}</td>
+                <td>{{ book.shelf }}</td>
+                <td>
+                    <!-- Edit button -->
+                    <a href="{{ url_for('edit_book', book_id=book.id) }}" class="btn">Edit</a>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

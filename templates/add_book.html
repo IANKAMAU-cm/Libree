@@ -1,0 +1,53 @@
+{% extends 'layout.html' %}
+
+{% block content %}
+<div class="container">
+    <h2>Add New Book</h2>
+    <form method="POST" enctype="multipart/form-data">
+        {{ form.hidden_tag() }}
+        <div class="form-group">
+            {{ form.picture.label }}<br>
+            {{ form.picture(class="form-control") }}
+        </div>
+        <div class="form-group">
+            {{ form.title.label }}<br>
+            {{ form.title(class="form-control") }}
+        </div>
+        <div class="form-group">
+            {{ form.author.label }}<br>
+            {{ form.author(class="form-control") }}
+        </div>
+        <div class="form-group">
+            {{ form.isbn.label }}<br>
+            {{ form.isbn(class="form-control") }}
+        </div>
+        <div class="form-group">
+            {{ form.genre.label }}<br>
+            {{ form.genre(class="form-control") }}
+        </div>
+        <div class="form-group">
+            {{ form.description.label }}<br>
+            {{ form.description(class="form-control") }}
+        </div>
+        <div class="form-group">
+            {{ form.publication_year.label }}<br>
+            {{ form.publication_year(class="form-control") }}
+        </div>
+        <div class="form-group">
+            {{ form.available_quantity.label }}<br>
+            {{ form.available_quantity(class="form-control") }}
+        </div>
+        <div class="form-group">
+            {{ form.total_quantity.label }}<br>
+            {{ form.total_quantity(class="form-control") }}
+        </div>
+        <div class="form-group">
+            {{ form.shelf.label }}<br>
+            {{ form.shelf(class="form-control")}}
+        </div>
+        <div class="form-group">
+            {{ form.submit(class="btn btn-primary") }}
+        </div>
+    </form>
+</div>
+{% endblock %}

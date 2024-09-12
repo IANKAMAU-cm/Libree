@@ -1,0 +1,63 @@
+<!-- templates/edit_book.html -->
+{% extends 'layout.html' %}
+
+{% block content %}
+<div class="container" style="padding-top: 20px;">
+    <h1>Edit Book</h1>
+    <form method="POST" enctype="multipart/form-data">
+        {{ form.hidden_tag() }}
+
+        <div class="form-group">
+            {{ form.picture.label(class="form-control-label") }}
+            {{ form.picture(class="form-control-file") }}
+        </div>
+
+        <div class="form-group">
+            {{ form.title.label(class="form-control-label") }}
+            {{ form.title(class="form-control") }}
+        </div>
+
+        <div class="form-group">
+            {{ form.author.label(class="form-control-label") }}
+            {{ form.author(class="form-control") }}
+        </div>
+
+        <div class="form-group">
+            {{ form.isbn.label(class="form-control-label") }}
+            {{ form.isbn(class="form-control") }}
+        </div>
+
+        <div class="form-group">
+            {{ form.genre.label(class="form-control-label") }}
+            {{ form.genre(class="form-control") }}
+        </div>
+
+        <div class="form-group">
+            {{ form.description.label(class="form-control-label") }}
+            {{ form.description(class="form-control") }}
+        </div>
+
+        <div class="form-group">
+            {{ form.publication_year.label(class="form-control-label") }}
+            {{ form.publication_year(class="form-control") }}
+        </div>
+
+        <div class="form-group">
+            {{ form.available_quantity.label(class="form-control-label") }}
+            {{ form.available_quantity(class="form-control") }}
+        </div>
+
+        <div class="form-group">
+            {{ form.total_quantity.label(class="form-control-label") }}
+            {{ form.total_quantity(class="form-control") }}
+        </div>
+
+        <div class="form-group">
+            {{ form.shelf.label(class="form-control-label") }}
+            {{ form.shelf(class="form-control") }}
+        </div>
+
+        <button type="submit" class="btn btn-primary">{{ form.submit.label.text }}</button>
+    </form>
+</div>
+{% endblock %}

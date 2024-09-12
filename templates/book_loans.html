@@ -1,0 +1,26 @@
+<table>
+    <thead>
+        <tr>
+            <th>Book Title</th>
+            <th>Borrower</th>
+            <th>Due Date</th>
+            <th>Status</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for loan in loans %}
+        <tr>
+            <td>{{ loan.book.title }}</td>
+            <td>{{ loan.member.username }}</td>
+            <td>{{ loan.due_date }}</td>
+            <td>{{ loan.status }}</td>
+            <td>
+                <form action="{{ url_for('return_book', loan_id=loan.id) }}" method="POST">
+                    <button type="submit">Mark as Returned</button>
+                </form>
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>

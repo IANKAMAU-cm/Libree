@@ -1,0 +1,63 @@
+/* styles.css */
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+}
+
+.nav-link {
+    color: #333;
+}
+
+.nav-link.active {
+    font-weight: bold;
+}
+
+.sidebar {
+    height: 100vh;
+    position: fixed;
+    width: 190px;
+    top: 0;
+    left: 0;
+    padding-top: 20px;
+    z-index: 1000;
+}
+
+.sidebar .nav-link {
+    padding: 10px;
+}
+
+/* Header */
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px;
+    background-color: #fff;
+}
+
+
+.main {
+    margin-left: -60px; /* Adjust based on sidebar width */
+    padding: 20px;
+    width: calc(100% - 190px); /* Take the full width minus the sidebar width */
+    /*min-height: 100vh; /* Ensure it fills the viewport height */
+}
+
+.content-area {
+    background-color: #f9f9f9;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(238, 131, 131, 0.1);
+    min-height: 100vh; /* Full height minus header space */
+    width: 100%;
+}
+
+.btn {
+    color: rgb(243, 114, 8);
+    font-weight: bold;
+}
+
+.btn:hover {
+    background-color: rgb(177, 228, 39);
+}
