@@ -30,10 +30,10 @@
                             <p class="card-text"><strong>Description:</strong>{{ book.description }}</p>
                             <p class="card-text"><strong>Publication Year:</strong>{{ book.publication_year }}</p>
                             {% if book.available_quantity > 0 %}
-                            <button onclick="document.getElementById('borrow-form').submit();">Borrow</button>
-
-                            <form id="borrow-form" action="{{ url_for('borrow_book', book_id=book.id) }}" method="POST" style="display:none;">
-                                {{ csrf_token() }}
+                            
+                            <form id="borrow-form" action="{{ url_for('borrow_book', book_id=book.id) }}" method="POST">
+                                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                                <button type="submit" class="btn btn-primary">Borrow</button>
                             </form>
                             {% else %}
                             <span>Not Available</span>
