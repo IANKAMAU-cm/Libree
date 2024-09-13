@@ -1,30 +1,70 @@
-<!-- templates/login.html -->
-{% extends 'layout.html' %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Librarian Login</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            background-color: #f8f9fa;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+        .login-container {
+            background-color: white;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0px 0px 15px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 400px;
+        }
+        h2 {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        p {
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
 
-{% block content %}
-<h2>Librarian Login</h2>
-<form method="POST" action="{{ url_for('login') }}">
-    {{ form.hidden_tag() }}
+<div class="login-container">
+    <h2>Librarian Login</h2>
+    <form method="POST" action="{{ url_for('login') }}">
+        {{ form.hidden_tag() }}
 
-    <div class="form-group">
-        {{ form.username.label }}<br>
-        {{ form.username(size=32, class_='form-control') }}<br>
-        {% for error in form.username.errors %}
-        <small class="text-danger">{{ error }}</small>
-        {% endfor %}
-    </div>
+        <div class="form-group">
+            {{ form.username.label }}<br>
+            {{ form.username(size=32, class_='form-control') }}<br>
+            {% for error in form.username.errors %}
+            <small class="text-danger">{{ error }}</small>
+            {% endfor %}
+        </div>
 
-    <div class="form-group">
-        {{ form.password.label }}<br>
-        {{ form.password(size=32, class_='form-control') }}<br>
-        {% for error in form.password.errors %}
-        <small class="text-danger">{{ error }}</small>
-        {% endfor %}
-    </div>
+        <div class="form-group">
+            {{ form.password.label }}<br>
+            {{ form.password(size=32, class_='form-control') }}<br>
+            {% for error in form.password.errors %}
+            <small class="text-danger">{{ error }}</small>
+            {% endfor %}
+        </div>
 
-    <div class="form-group">
-        {{ form.submit(class_='btn btn-primary') }}
-    </div>
-</form>
-<p>Don't have an account? <a href="{{ url_for('register') }}">Register here</a></p>
-{% endblock %}
+        <div class="form-group">
+            {{ form.submit(class_='btn btn-primary btn-block') }}
+        </div>
+    </form>
+
+    <p>Don't have an account? <a href="{{ url_for('register') }}">Register here</a></p>
+</div>
+
+<!-- Bootstrap JS and dependencies (Optional if you need JS components) -->
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.2/dist/js/bootstrap.bundle.min.js"></script>
+
+</body>
+</html>

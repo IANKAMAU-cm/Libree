@@ -1,50 +1,156 @@
-{% extends "layout.html" %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Library - View Books</title>
 
-{% block content %}
-<div class="container">
-    <nav class="navbar navbar-expand-lg navbar-light bg-light">
-        <a class="navbar-brand" href="#">Library</a>
+    <!-- Bootstrap CSS (optional, you can replace with custom styles) -->
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Custom Styles -->
+    <style>
+        body {
+            background-color: #f8f9fa; /* Light background */
+            font-family: Arial, sans-serif;
+        }
+
+        .navbar {
+            background-color: #007bff !important; /* Ensure the blue background is applied */
+            width: 100%;
+            padding: 1rem; /* Add padding for better visual spacing */
+            margin: 0;
+        }
+
+        .navbar-brand, .nav-link {
+            color: #fff !important; /* Ensure the text is white */
+        }
+
+
+        .card {
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            transition: transform 0.2s;
+        }
+
+        .card:hover {
+            transform: scale(1.02); /* Slightly grow on hover */
+        }
+
+        .card-body {
+            padding: 15px;
+        }
+
+        .card-title {
+            font-size: 1.25rem;
+            font-weight: bold;
+            color: #333;
+        }
+
+        .card-text {
+            color: #666;
+        }
+
+        .btn-primary {
+            background-color: #007bff;
+            border-color: #007bff;
+            width: 100%;
+            font-size: 16px;
+            font-weight: bold;
+        }
+
+        .btn-primary:hover {
+            background-color: #0056b3;
+        }
+
+        .container {
+            margin-top: 20px;
+        }
+
+        .row {
+            margin-bottom: 30px;
+        }
+
+        img {
+            display: block;
+            margin: 0 auto 15px;
+            max-height: 150px;
+            object-fit: cover;
+        }
+
+        .no-books {
+            text-align: center;
+            color: #777;
+        }
+
+        /* Media Query for Mobile */
+        @media (max-width: 768px) {
+            .card-title {
+                font-size: 1rem;
+            }
+
+            .card-text {
+                font-size: 0.875rem;
+            }
+
+            .btn-primary {
+                font-size: 14px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-light bg-light w-100">
+        <a class="navbar-brand" href="#">Open Library</a>
         <div class="collapse navbar-collapse" id="navbarNav">
-            <ul class="navbar-nav ml-auto">
-                <li class="nav-item">
-                    <a class="nav-link" href="{{ url_for('mlogout') }}">Logout</a>
-                    <a href="{{ url_for('member_loans', member_id=session['member_id']) }}">Borrowed Books</a>
-                </li>
-            </ul>
+            <div class="ml-auto d-flex">  <!-- Use d-flex for a horizontal layout -->
+                <a class="nav-link mr-3" href="{{ url_for('mlogout') }}">Logout</a>  <!-- Add margin to the right -->
+                <a class="nav-link" href="{{ url_for('member_loans', member_id=session['member_id']) }}">Borrowed Books</a>
+            </div>
         </div>
     </nav>
-    
-    {% if books %}
+
+    <div class="container">
+        <!-- Books Display -->
+        {% if books %}
         <div class="row">
             {% for book in books %}
-                <div class="col-md-4 mb-4"> <!-- Adjust col-md-4 for 3 books per row -->
-                    <div class="card h-100">
-                        <div class="card-body">
-                            {% if book.picture %}
-                            <img src="{{ url_for('static', filename='uploads/' + book.picture) }}" alt="{{ book.title }}" width="100">
-                            {% else %}
-                            No image
-                            {% endif %}
-                            <h5 class="card-title">{{ book.title }}</h5>
-                            <p class="card-text"><strong>Author:</strong> {{ book.author }}</p>
-                            <p class="card-text"><strong>Description:</strong>{{ book.description }}</p>
-                            <p class="card-text"><strong>Publication Year:</strong>{{ book.publication_year }}</p>
-                            {% if book.available_quantity > 0 %}
-                            
-                            <form id="borrow-form" action="{{ url_for('borrow_book', book_id=book.id) }}" method="POST">
-                                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
-                                <button type="submit" class="btn btn-primary">Borrow</button>
-                            </form>
-                            {% else %}
-                            <span>Not Available</span>
-                            {% endif %}
-                        </div>
+            <div class="col-md-4 mb-4"> <!-- Adjust col-md-4 for 3 books per row -->
+                <div class="card h-100">
+                    <div class="card-body">
+                        {% if book.picture %}
+                        <img src="{{ url_for('static', filename='uploads/' + book.picture) }}" alt="{{ book.title }}" class="img-fluid">
+                        {% else %}
+                        <p>No image available</p>
+                        {% endif %}
+                        <h5 class="card-title">{{ book.title }}</h5>
+                        <p class="card-text"><strong>Author:</strong> {{ book.author }}</p>
+                        <p class="card-text"><strong>Description:</strong> {{ book.description }}</p>
+                        <p class="card-text"><strong>Publication Year:</strong> {{ book.publication_year }}</p>
+                        {% if book.available_quantity > 0 %}
+                        <form id="borrow-form" action="{{ url_for('borrow_book', book_id=book.id) }}" method="POST">
+                            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                            <button type="submit" class="btn btn-primary">Borrow</button>
+                        </form>
+                        {% else %}
+                        <span class="text-danger">Not Available</span>
+                        {% endif %}
                     </div>
                 </div>
+            </div>
             {% endfor %}
         </div>
-    {% else %}
-        <p>No books available at the moment.</p>
-    {% endif %}
-</div>
-{% endblock %}
+        {% else %}
+        <p class="no-books">No books available at the moment.</p>
+        {% endif %}
+    </div>
+
+    <!-- Optional JavaScript (Bootstrap and jQuery) -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.2/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>

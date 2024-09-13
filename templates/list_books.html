@@ -1,16 +1,47 @@
-{% extends 'layout.html' %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Book List</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            background-color: #f8f9fa;
+        }
+        .container {
+            padding-top: 30px;
+        }
+        h2 {
+            margin-bottom: 20px;
+        }
+        .dlink {
+            margin-bottom: 20px;
+        }
+        table {
+            margin-top: 20px;
+        }
+        img {
+            max-width: 100px;
+            height: auto;
+        }
+    </style>
+</head>
+<body>
 
-{% block content %}
 <div class="container">
-    <div class="dlink" style="padding-top: 20px;">
+    <div class="dlink">
         <!-- Link to navigate back to the dashboard -->
-        <a href="{{ url_for('dashboard') }}" class="btn btn-primary mb-3">Dashboard</a>
+        <a href="{{ url_for('dashboard') }}" class="btn btn-primary">Dashboard</a>
     </div>
+
     <div class="d-flex justify-content-between align-items-center">
         <h2>Book List</h2>
         <!-- Add Book Button -->
         <a href="{{ url_for('add_book') }}" class="btn btn-primary">Add New Book</a>
     </div>
+
     <table class="table table-striped">
         <thead>
             <tr>
@@ -48,11 +79,17 @@
                 <td>{{ book.shelf }}</td>
                 <td>
                     <!-- Edit button -->
-                    <a href="{{ url_for('edit_book', book_id=book.id) }}" class="btn">Edit</a>
+                    <a href="{{ url_for('edit_book', book_id=book.id) }}" class="btn btn-secondary">Edit</a>
                 </td>
             </tr>
             {% endfor %}
         </tbody>
     </table>
 </div>
-{% endblock %}
+
+<!-- Bootstrap JS and dependencies (Optional) -->
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.2/dist/js/bootstrap.bundle.min.js"></script>
+
+</body>
+</html>

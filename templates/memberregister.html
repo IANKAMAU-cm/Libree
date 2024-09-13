@@ -1,10 +1,45 @@
-{% extends "layout.html" %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Member Registration</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            background-color: #f4f6f9;
+            padding-top: 50px;
+        }
+        .container {
+            max-width: 500px;
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0px 0px 15px rgba(0, 0, 0, 0.1);
+        }
+        h2 {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        .form-group {
+            margin-bottom: 20px;
+        }
+        .btn-primary {
+            width: 100%;
+        }
+        .alert {
+            margin-top: 10px;
+            padding: 5px;
+        }
+    </style>
+</head>
+<body>
 
-{% block content %}
 <div class="container">
     <h2>Member Registration</h2>
     <form method="POST" action="{{ url_for('mregister') }}">
-        {{ form.hidden_tag() }} <!-- This ensures CSRF protection -->
+        {{ form.hidden_tag() }} <!-- CSRF protection -->
 
         <div class="form-group">
             {{ form.username.label(class="form-label") }}
@@ -36,7 +71,14 @@
             {% endif %}
         </div>
 
-        {{ form.submit(class="btn btn-primary") }}
+        <div class="form-group">
+            {{ form.submit(class="btn btn-primary") }}
+        </div>
     </form>
 </div>
-{% endblock %}
+
+<!-- Bootstrap JS and dependencies (Optional if you need JS components) -->
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.2/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

@@ -1,53 +1,89 @@
-{% extends 'layout.html' %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add New Book</title>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            padding-top: 20px;
+        }
+        .form-group label {
+            font-weight: bold;
+        }
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+        .btn-primary {
+            background-color: #007bff;
+            border: none;
+        }
+        .btn-primary:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>Add New Book</h2>
+        <form method="POST" enctype="multipart/form-data">
+            {{ form.hidden_tag() }}
+            
+            <div class="form-group">
+                {{ form.picture.label }}<br>
+                {{ form.picture(class="form-control-file") }}
+            </div>
 
-{% block content %}
-<div class="container">
-    <h2>Add New Book</h2>
-    <form method="POST" enctype="multipart/form-data">
-        {{ form.hidden_tag() }}
-        <div class="form-group">
-            {{ form.picture.label }}<br>
-            {{ form.picture(class="form-control") }}
-        </div>
-        <div class="form-group">
-            {{ form.title.label }}<br>
-            {{ form.title(class="form-control") }}
-        </div>
-        <div class="form-group">
-            {{ form.author.label }}<br>
-            {{ form.author(class="form-control") }}
-        </div>
-        <div class="form-group">
-            {{ form.isbn.label }}<br>
-            {{ form.isbn(class="form-control") }}
-        </div>
-        <div class="form-group">
-            {{ form.genre.label }}<br>
-            {{ form.genre(class="form-control") }}
-        </div>
-        <div class="form-group">
-            {{ form.description.label }}<br>
-            {{ form.description(class="form-control") }}
-        </div>
-        <div class="form-group">
-            {{ form.publication_year.label }}<br>
-            {{ form.publication_year(class="form-control") }}
-        </div>
-        <div class="form-group">
-            {{ form.available_quantity.label }}<br>
-            {{ form.available_quantity(class="form-control") }}
-        </div>
-        <div class="form-group">
-            {{ form.total_quantity.label }}<br>
-            {{ form.total_quantity(class="form-control") }}
-        </div>
-        <div class="form-group">
-            {{ form.shelf.label }}<br>
-            {{ form.shelf(class="form-control")}}
-        </div>
-        <div class="form-group">
-            {{ form.submit(class="btn btn-primary") }}
-        </div>
-    </form>
-</div>
-{% endblock %}
+            <div class="form-group">
+                {{ form.title.label }}<br>
+                {{ form.title(class="form-control") }}
+            </div>
+
+            <div class="form-group">
+                {{ form.author.label }}<br>
+                {{ form.author(class="form-control") }}
+            </div>
+
+            <div class="form-group">
+                {{ form.isbn.label }}<br>
+                {{ form.isbn(class="form-control") }}
+            </div>
+
+            <div class="form-group">
+                {{ form.genre.label }}<br>
+                {{ form.genre(class="form-control") }}
+            </div>
+
+            <div class="form-group">
+                {{ form.description.label }}<br>
+                {{ form.description(class="form-control") }}
+            </div>
+
+            <div class="form-group">
+                {{ form.publication_year.label }}<br>
+                {{ form.publication_year(class="form-control") }}
+            </div>
+
+            <div class="form-group">
+                {{ form.available_quantity.label }}<br>
+                {{ form.available_quantity(class="form-control") }}
+            </div>
+
+            <div class="form-group">
+                {{ form.total_quantity.label }}<br>
+                {{ form.total_quantity(class="form-control") }}
+            </div>
+
+            <div class="form-group">
+                {{ form.shelf.label }}<br>
+                {{ form.shelf(class="form-control") }}
+            </div>
+
+            <div class="form-group">
+                {{ form.submit(class="btn btn-primary") }}
+            </div>
+        </form>
+    </div>
+</body>
+</html>

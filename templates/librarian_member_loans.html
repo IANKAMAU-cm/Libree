@@ -3,36 +3,21 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Member Loans</title>
+    <title>Loans for {{ member.username }} (Admin View)</title>
     <!-- Bootstrap CSS -->
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
     <style>
         body {
             background-color: #f8f9fa;
-            padding-top: 50px;
         }
         .container {
-            max-width: 800px;
-            background-color: white;
-            padding: 20px;
-            border-radius: 8px;
-            box-shadow: 0px 0px 15px rgba(0, 0, 0, 0.1);
+            padding-top: 30px;
         }
         h2 {
-            text-align: center;
-            margin-bottom: 30px;
-        }
-        .table {
-            margin-top: 20px;
-        }
-        .nav-link {
             margin-bottom: 20px;
-            display: inline-block;
-            color: #007bff;
-            text-decoration: none;
         }
-        .nav-link:hover {
-            text-decoration: underline;
+        table {
+            margin-top: 20px;
         }
         .table-danger {
             background-color: #f8d7da;
@@ -42,12 +27,9 @@
 <body>
 
 <div class="container">
-    <a class="nav-link" href="{{ url_for('view_books') }}">View Books</a>
-    
-    <h2>Loans for {{ member.username }}</h2>
-    
-    <table class="table table-striped table-bordered">
-        <thead class="thead-light">
+    <h2>Books loaned to {{ member.username }}</h2>
+    <table class="table table-striped">
+        <thead>
             <tr>
                 <th>Book Title</th>
                 <th>Borrow Date</th>
@@ -76,7 +58,7 @@
     </table>
 </div>
 
-<!-- Bootstrap JS and dependencies (Optional if you need JS components) -->
+<!-- Bootstrap JS and dependencies (Optional) -->
 <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.2/dist/js/bootstrap.bundle.min.js"></script>
 

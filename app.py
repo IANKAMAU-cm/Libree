@@ -9,7 +9,8 @@ from werkzeug.security import generate_password_hash, check_password_hash
 from werkzeug.utils import secure_filename
 from datetime import datetime, timedelta
 from flask_wtf.csrf import CSRFProtect
-
+from flask_wtf import FlaskForm
+from wtforms import SubmitField
 
 
 app = Flask(__name__)
@@ -45,15 +46,19 @@ def manage_members():
 
 @app.route('/librarian/member/<int:member_id>/loans')
 def librarian_member_loans(member_id):
-    if 'librarian_id' not in session:
-        flash('Only librarians can access this page.', 'danger')
-        return redirect(url_for('librarian_login'))
-
+    # Retrieve the member by their ID
+    member = Member.query.get_or_404(member_id)
+    
+    # Retrieve the loans for the member
     loans = Loan.query.filter_by(member_id=member_id).all()
-    return render_template('member_loans.html', loans=loans)
+    
+    # Render the admin-specific template
+    return render_template('librarian_member_loans.html', loans=loans, member=member)
+
+
 
 #Route for admin registration and login
-@app.route('/admin', methods=['GET', 'POST'])
+@app.route('/login', methods=['GET', 'POST'])
 def login():
     form = LoginForm()
     if form.validate_on_submit():
@@ -234,45 +239,58 @@ def borrow_book(book_id):
         flash('This book is currently unavailable', 'danger')
     return redirect(url_for('view_books'))
 
+
+# Define a simple form with CSRF protection
+class ReturnBookForm(FlaskForm):
+    submit = SubmitField('Mark as Returned')
+
 @app.route('/return/<int:loan_id>', methods=['POST'])
 def return_book(loan_id):
-    loan = Loan.query.get_or_404(loan_id)
-    book = Book.query.get(loan.book_id)
-    
-    # Check if the book is overdue
-    if datetime.utcnow() > loan.due_date and loan.status == 'borrowed':
-        loan.status = 'overdue'
-        flash(f'The book {book.title} is overdue! Please return it as soon as possible.', 'warning')
+    form = ReturnBookForm()
 
-    if loan.status == 'borrowed':
-        loan.status = 'returned'
-        loan.return_date = datetime.utcnow()
-        book.available_quantity += 1
-        db.session.commit()
-        flash(f'Book {book.title} has been returned successfully.', 'success')
-    
-    return redirect(url_for('librarian_member_loans', member_id=loan.member_id))  
-
-def update_loan_status():
-    loans = Loan.query.filter_by(status='borrowed').all()
-    for loan in loans:
-        if datetime.utcnow() > loan.due_date:
+    if form.validate_on_submit():  # Ensures CSRF token is valid
+        loan = Loan.query.get_or_404(loan_id)
+        book = Book.query.get(loan.book_id)
+        
+        # Check if the book is overdue
+        if datetime.utcnow() > loan.due_date and loan.status == 'borrowed':
             loan.status = 'overdue'
-    db.session.commit()
+            flash(f'The book {book.title} is overdue! Please return it as soon as possible.', 'warning')
+
+        if loan.status == 'borrowed':
+            loan.status = 'returned'
+            loan.return_date = datetime.utcnow()
+            book.available_quantity += 1
+            db.session.commit()
+            flash(f'Book {book.title} has been returned successfully.', 'success')
+
+        # Redirect to different pages based on the role
+        if 'librarian_id' in session:
+            return redirect(url_for('dashboard', member_id=loan.member_id))
+        elif 'member_id' in session and session['member_id'] == loan.member_id:
+            return redirect(url_for('dashboard', member_id=loan.member_id))
+        else:
+            return redirect(url_for('dashboard'))  # Redirect to a default page if neither role is detected
+
+    # Handle case where form validation fails
+    flash('Invalid submission or CSRF token.', 'danger')
+    return redirect(url_for('book_loans'))
+
 
 @app.route('/member/<int:member_id>/loans')
 def member_loans(member_id):
     if 'member_id' not in session or session['member_id'] != member_id:
         flash('You are not authorized to view this page.', 'danger')
         return redirect(url_for('mlogin'))
-    #member = Member.query.get_or_404(member_id)
+    member = Member.query.get_or_404(member_id)
     loans = Loan.query.filter_by(member_id=member_id).all()
-    return render_template('member_loans.html', loans=loans)
+    return render_template('member_loans.html', loans=loans, member=member, member_id=member_id)
 
 @app.route('/book_loans')
 def book_loans():
     loans = Loan.query.filter(Loan.status != 'returned').all()  # Show only active loans
-    return render_template('book_loans.html', loans=loans)
+    form = ReturnBookForm()  # Create an instance of the form
+    return render_template('book_loans.html', loans=loans, form=form)
 
 # Create the database tables if they don't exist
 if __name__ == '__main__':
