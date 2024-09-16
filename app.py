@@ -305,17 +305,16 @@ def search():
             (Book.isbn.ilike(f'%{query}%'))
         ).all()
 
-        member_results = Member.query.filter(
-            (Member.username.ilike(f'%{query}%')) |
-            (Member.borrow_history.ilike(f'%{query}%'))
+        member_results = Member.query.join(Loan).filter(
+            (Member.username.ilike(f'%{query}%'))
         ).all()
 
-        loan_results = Loan.query.filter(
-            (Loan.book.ilike(f'%{query}%')) |
+        # Search in the Loan model and join with Book and Member to search related fields
+        loan_results = Loan.query.join(Member).join(Book).filter(
+            (Book.title.ilike(f'%{query}%')) |   # Search for the book title in loans
             (Loan.status.ilike(f'%{query}%')) | 
-            (Loan.borrow_date.ilike(f'%{query}%')) |
-            (Loan.return_date.ilike(f'%{query}%')) |
-            (Loan.due_date.ilike(f'%{query}%'))
+            (Loan.due_date.ilike(f'%{query}%')) |
+            (Member.username.ilike(f'%{query}%'))  # Search for member username in loans
         ).all()
 
         return render_template('search_results.html', 
