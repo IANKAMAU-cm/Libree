@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Search Results</title>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+    <div class="container">
+        <h2>Search Results for "{{ query }}"</h2>
+
+        <h3>Books</h3>
+        <ul>
+            {% for book in book_results %}
+                <li>{{ book.title }} by {{ book.author }} (ISBN: {{ book.isbn }})</li>
+            {% else %}
+                <li>No books found.</li>
+            {% endfor %}
+        </ul>
+
+        <h3>Members</h3>
+        <ul>
+            {% for member in member_results %}
+                <li>{{ member.username }} {{ member.borrow_history }}</li>
+            {% else %}
+                <li>No members found.</li>
+            {% endfor %}
+        </ul>
+
+        <h3>Loans</h3>
+        <ul>
+            {% for loan in loan_results %}
+                <li>{{ loan.book.title }} loaned to {{ loan.member.username }} (Due: {{ loan.due_date }}) (Borrow Date: {{ loan.borrow_date }}) (Return Date: {{ loan.return_date }})</li>
+            {% else %}
+                <li>No loans found.</li>
+            {% endfor %}
+        </ul>
+
+        <a href="{{ url_for('dashboard') }}" class="btn btn-primary">Back to Dashboard</a>
+    </div>
+</body>
+</html>

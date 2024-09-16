@@ -292,6 +292,42 @@ def book_loans():
     form = ReturnBookForm()  # Create an instance of the form
     return render_template('book_loans.html', loans=loans, form=form)
 
+#search route
+@app.route('/search', methods=['GET'])
+def search():
+    query = request.args.get('query')
+    
+    if query:
+        # Searching across multiple models, adjust depending on your schema
+        book_results = Book.query.filter(
+            (Book.title.ilike(f'%{query}%')) | 
+            (Book.author.ilike(f'%{query}%')) |
+            (Book.isbn.ilike(f'%{query}%'))
+        ).all()
+
+        member_results = Member.query.filter(
+            (Member.username.ilike(f'%{query}%')) |
+            (Member.borrow_history.ilike(f'%{query}%'))
+        ).all()
+
+        loan_results = Loan.query.filter(
+            (Loan.book.ilike(f'%{query}%')) |
+            (Loan.status.ilike(f'%{query}%')) | 
+            (Loan.borrow_date.ilike(f'%{query}%')) |
+            (Loan.return_date.ilike(f'%{query}%')) |
+            (Loan.due_date.ilike(f'%{query}%'))
+        ).all()
+
+        return render_template('search_results.html', 
+                               query=query, 
+                               book_results=book_results, 
+                               member_results=member_results,
+                               loan_results=loan_results)
+    else:
+        # No query, just redirect to the dashboard or show an error message
+        return redirect(url_for('dashboard'))
+
+
 # Create the database tables if they don't exist
 if __name__ == '__main__':
     with app.app_context():
