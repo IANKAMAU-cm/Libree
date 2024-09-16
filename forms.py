@@ -58,3 +58,7 @@ class MLoginForm(FlaskForm):
     password = PasswordField('Password', validators=[DataRequired()])
     submit = SubmitField('Login')
 
+class EbookUploadForm(FlaskForm):
+    title = StringField('Title', validators=[DataRequired()])
+    file = FileField('E-book', validators=[DataRequired()])
+    submit = SubmitField('Upload')

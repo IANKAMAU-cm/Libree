@@ -1,0 +1,11 @@
+<form method="POST" enctype="multipart/form-data" action="{{ url_for('upload_ebook') }}">
+    {{ form.hidden_tag() }}  <!-- CSRF token -->
+    
+    <label for="title">E-book Title</label>
+    {{ form.title() }}  <!-- Renders the title input -->
+
+    <label for="file">Upload E-book</label>
+    {{ form.file() }}  <!-- Renders the file input -->
+
+    {{ form.submit() }}  <!-- Renders the submit button -->
+</form>

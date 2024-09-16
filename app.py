@@ -1,7 +1,7 @@
 from flask import Flask, render_template, redirect, url_for, flash, request, session
 from flask_sqlalchemy import SQLAlchemy
-from models import Admin, Book, Member, Loan
-from forms import LoginForm, RegisterForm, BookForm, EditBookForm, MLoginForm, MRegisterForm
+from models import Admin, Book, Member, Loan, Ebook
+from forms import LoginForm, RegisterForm, BookForm, EditBookForm, MLoginForm, MRegisterForm, EbookUploadForm
 from flask_login import LoginManager, login_user, logout_user
 from database import db
 import os
@@ -141,9 +141,16 @@ def list_books():
     books = Book.query.all()
     return render_template('list_books.html', books=books)
 
-@app.route('/view_books')
+@app.route('/view_books', methods=['GET'])
 def view_books():
-    books = Book.query.all()  # Query to fetch all books
+    # Get the current page number, defaulting to 1 if not provided
+    page = request.args.get('page', 1, type=int)
+    
+    # Define how many books per page
+    per_page = 10
+
+    books = Book.query.paginate(page=page, per_page=per_page)
+    #books = Book.query.all()  # Query to fetch all books
 
     if 'member_id' not in session:
         flash('Please log in to access this page.', 'warning')
@@ -326,6 +333,66 @@ def search():
         # No query, just redirect to the dashboard or show an error message
         return redirect(url_for('dashboard'))
 
+
+# Route for searching books
+@app.route('/search_books', methods=['GET'])
+def search_books():
+    query = request.args.get('query')
+    page = request.args.get('page', 1, type=int)
+    per_page = 10
+
+    if query:
+        # Search for books by title, author, or ISBN
+        book_results = Book.query.filter(
+            (Book.title.ilike(f'%{query}%')) | 
+            (Book.author.ilike(f'%{query}%')) | 
+            (Book.isbn.ilike(f'%{query}%'))
+        ).paginate(page=page, per_page=per_page)
+
+        return render_template('view_books.html', books=book_results, query=query)
+    else:
+        # If no query, return all books or redirect to the view_books page
+        all_books = Book.query.all()
+        return render_template('view_books.html', books=all_books)
+
+
+@app.route('/upload_ebook', methods=['GET', 'POST'])
+def upload_ebook():
+    form = EbookUploadForm()
+    if request.method == 'POST' and form.validate_on_submit():
+        title = form.title.data
+        file = form.file.data
+
+        if file:
+            filename = secure_filename(file.filename)
+            file_path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
+            file.save(file_path)
+
+            # Store the path relative to 'static' for URLs
+            file_url = f'uploads/{filename}'
+            # Debugging print statements
+            print(f"File saved at: {file_path}")  # File path on disk
+            print(f"File URL: {file_url}")        # URL path
+
+
+            new_ebook = Ebook(title=title, file_path=file_url)
+            db.session.add(new_ebook)
+            db.session.commit()
+
+            flash('E-book uploaded successfully!', 'success')
+            return redirect(url_for('upload_ebook'))
+
+    return render_template('upload_ebook.html', form=form)
+
+@app.route('/view_ebooks')
+def view_ebooks():
+    ebooks = Ebook.query.all()
+    return render_template('view_ebooks.html', ebooks=ebooks)
+
+@app.route('/read_ebook/<int:ebook_id>')
+def read_ebook(ebook_id):
+    ebook = Ebook.query.get_or_404(ebook_id)
+    return render_template('read_ebook.html', ebook=ebook)
 
 # Create the database tables if they don't exist
 if __name__ == '__main__':
