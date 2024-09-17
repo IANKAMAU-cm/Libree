@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Reports</title>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+    <div class="container mt-5">
+        <h2>Generate Reports</h2>
+        <ul class="list-group">
+            <li class="list-group-item">
+                <a href="{{ url_for('borrowed_books_report') }}">All Borrowed Books and Associated Members</a>
+            </li>
+            <li class="list-group-item">
+                <a href="{{ url_for('all_books_report') }}">All Books and E-books</a>
+            </li>
+            <li class="list-group-item">
+                <a href="{{ url_for('returned_books_report') }}">All Returned Books and Associated Members</a>
+            </li>
+            <!-- Add other reports as needed -->
+        </ul>
+    </div>
+</body>
+</html>

@@ -1,16 +1,18 @@
-from flask import Flask, render_template, redirect, url_for, flash, request, session
+from flask import Flask, render_template, redirect, url_for, flash, request, session, send_file
 from flask_sqlalchemy import SQLAlchemy
 from models import Admin, Book, Member, Loan, Ebook
 from forms import LoginForm, RegisterForm, BookForm, EditBookForm, MLoginForm, MRegisterForm, EbookUploadForm
 from flask_login import LoginManager, login_user, logout_user
 from database import db
 import os
+import pandas as pd
 from werkzeug.security import generate_password_hash, check_password_hash
 from werkzeug.utils import secure_filename
 from datetime import datetime, timedelta
 from flask_wtf.csrf import CSRFProtect
 from flask_wtf import FlaskForm
 from wtforms import SubmitField
+from io import BytesIO
 
 
 app = Flask(__name__)
@@ -131,9 +133,32 @@ def mlogout():
 #route to the dashboard
 @app.route('/dashboard')
 def dashboard():
-    # You can add logic to fetch data about books, loans, members, etc.
+    # Card 1: Most Recent Borrowed Books
+    recent_borrowed_books = Loan.query.order_by(Loan.borrow_date.desc()).limit(5).all()
+
+    # Card 2: Total Books and E-books
+    total_books = Book.query.count()
+    total_ebooks = Ebook.query.count()
+
+    # Graph 1: Members with Most Borrowed Books
+    members = Member.query.all()
+    member_names = [member.username for member in members]
+    member_borrow_count = [Loan.query.filter_by(member_id=member.id).count() for member in members]
+
+    # Graph 2: Most Borrowed Books
+    books = Book.query.all()
+    book_titles = [book.title for book in books]
+    book_borrow_count = [Loan.query.filter_by(book_id=book.id).count() for book in books]
+
+
     selected_member_id = None  # Define or retrieve the selected member ID
-    return render_template('dashboard.html', selected_member_id=selected_member_id)
+    return render_template('dashboard.html', selected_member_id=selected_member_id, recent_borrowed_books=recent_borrowed_books,
+        total_books=total_books,
+        total_ebooks=total_ebooks,
+        member_names=member_names,
+        member_borrow_count=member_borrow_count,
+        book_titles=book_titles,
+        book_borrow_count=book_borrow_count)
 
 # Route to list books
 @app.route('/books')
@@ -393,6 +418,103 @@ def view_ebooks():
 def read_ebook(ebook_id):
     ebook = Ebook.query.get_or_404(ebook_id)
     return render_template('read_ebook.html', ebook=ebook)
+
+
+@app.route('/report/borrowed_books', methods=['GET'])
+def borrowed_books_report():
+    # Query borrowed books
+    borrowed_books = Loan.query.filter_by(status='borrowed').all()
+
+    # Create data for the report
+    data = []
+    for loan in borrowed_books:
+        data.append({
+            "Book Title": loan.book.title,
+            "Author": loan.book.author,
+            "ISBN": loan.book.isbn,
+            "Borrower Name": loan.member.username,
+            "Borrow Date": loan.borrow_date,
+            "Due Date": loan.due_date
+        })
+
+    # Create a DataFrame and export it as a CSV
+    df = pd.DataFrame(data)
+    
+    # Save to a BytesIO buffer to send as a file
+    buffer = BytesIO()
+    df.to_csv(buffer, index=False)
+    buffer.seek(0)
+
+    return send_file(buffer, as_attachment=True, download_name="borrowed_books_report.csv", mimetype='text/csv')
+
+@app.route('/reports')
+def reports_page():
+    return render_template('reports.html')
+
+@app.route('/report/all_books', methods=['GET'])
+def all_books_report():
+    # Query all books and e-books
+    books = Book.query.all()
+    ebooks = Ebook.query.all()
+
+    # Create data for the report
+    data = []
+    # Add physical books
+    for book in books:
+        data.append({
+            "Title": book.title,
+            "Author": book.author,
+            "ISBN": book.isbn,
+            "Publication Year": book.publication_year
+        })
+    
+    # Add e-books
+    for ebook in ebooks:
+        data.append({
+            "Title": ebook.title,
+            "Author": 'N/A',  # Assuming e-books don't have an author field
+            "ISBN": 'N/A',    # Assuming e-books don't have an ISBN field
+            "Publication Year": 'N/A'  # Assuming e-books don't have a publication year
+        })
+
+    # Create a DataFrame and export as a CSV
+    df = pd.DataFrame(data)
+    
+    buffer = BytesIO()
+    df.to_csv(buffer, index=False)
+    buffer.seek(0)
+
+    return send_file(buffer, as_attachment=True, download_name="all_books_report.csv", mimetype='text/csv')
+
+
+
+@app.route('/report/returned_books', methods=['GET'])
+def returned_books_report():
+    # Query returned books
+    returned_books = Loan.query.filter_by(status='returned').all()
+
+    # Create data for the report
+    data = []
+    for loan in returned_books:
+        data.append({
+            "Book Title": loan.book.title,
+            "Author": loan.book.author,
+            "ISBN": loan.book.isbn,
+            "Borrower Name": loan.member.username,
+            "Borrow Date": loan.borrow_date,
+            "Return Date": loan.return_date
+        })
+
+    # Create a DataFrame and export as a CSV
+    df = pd.DataFrame(data)
+
+    buffer = BytesIO()
+    df.to_csv(buffer, index=False)
+    buffer.seek(0)
+
+    return send_file(buffer, as_attachment=True, download_name="returned_books_report.csv", mimetype='text/csv')
+
+
 
 # Create the database tables if they don't exist
 if __name__ == '__main__':

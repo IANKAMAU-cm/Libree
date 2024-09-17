@@ -6,6 +6,7 @@
     <title>Dashboard</title>
     <!-- Bootstrap CSS -->
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -20,9 +21,7 @@
             border-right: 1px solid #66a710;
             background-color: #cfcaec !important; /* Replace with your desired color */
         }
-        .content-area {
-            padding-top: 20px;
-        }
+        
         .container-fluid {
             padding-left: 0;
         }
@@ -54,7 +53,7 @@
                         <a class="nav-link" href="{{url_for('book_loans') }}">Book Lending</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="#">Reports</a>
+                        <a class="nav-link" href="{{ url_for('reports_page') }}">Reports</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="{{ url_for('upload_ebook') }}">Upload E-books</a>
@@ -80,10 +79,113 @@
             </div>
 
             <!-- Dashboard main content area -->
-            <div class="content-area">
-                <h3>Overview</h3>
-                <p>This is the content area where graphs, stats, and other information will be displayed.</p>
+            <div class="container mt-4">
+                <div class="row">
+                    <!-- Card 1: Most Recent Borrowed Books -->
+                    <div class="col-md-6">
+                        <div class="card">
+                            <div class="card-body">
+                                <h5 class="card-title">Most Recent Borrowed Books</h5>
+                                <ul class="list-group">
+                                    {% if recent_borrowed_books %}
+                                        {% for loan in recent_borrowed_books %}
+                                            <li class="list-group-item">
+                                                {{ loan.book.title }} (Borrowed On: {{ loan.borrow_date.strftime('%Y-%m-%d') }})
+                                            </li>
+                                        {% endfor %}
+                                    {% else %}
+                                        <li class="list-group-item">No books have been borrowed recently.</li>
+                                    {% endif %}
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+            
+                    <!-- Card 2: Total Books and E-books -->
+                    <div class="col-md-6">
+                        <div class="card">
+                            <div class="card-body">
+                                <h5 class="card-title">Total Books and E-books</h5>
+                                <p class="card-text">Total Books: {{ total_books }}</p>
+                                <p class="card-text">Total E-books: {{ total_ebooks }}</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
+
+            <div class="container mt-4">
+                <div class="row">
+                    <!-- Graph 1: Members with Most Borrowed Books -->
+                    <div class="col-md-6">
+                        <div class="card">
+                            <div class="card-body">
+                                <h5 class="card-title">Members with Most Borrowed Books</h5>
+                                <canvas id="membersMostBorrowedChart"></canvas>
+                            </div>
+                        </div>
+                    </div>
+            
+                    <!-- Graph 2: Most Borrowed Books -->
+                    <div class="col-md-6">
+                        <div class="card">
+                            <div class="card-body">
+                                <h5 class="card-title">Most Borrowed Books</h5>
+                                <canvas id="mostBorrowedBooksChart"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <script>
+                // Graph: Members with Most Borrowed Books
+                const membersMostBorrowedCtx = document.getElementById('membersMostBorrowedChart').getContext('2d');
+                const membersMostBorrowedChart = new Chart(membersMostBorrowedCtx, {
+                    type: 'bar',
+                    data: {
+                        labels: {{ member_names|tojson }},
+                        datasets: [{
+                            label: 'Books Borrowed',
+                            data: {{ member_borrow_count|tojson }},
+                            backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                            borderColor: 'rgba(75, 192, 192, 1)',
+                            borderWidth: 1
+                        }]
+                    },
+                    options: {
+                        scales: {
+                            y: {
+                                beginAtZero: true
+                            }
+                        }
+                    }
+                });
+            
+                // Graph: Most Borrowed Books
+                const mostBorrowedBooksCtx = document.getElementById('mostBorrowedBooksChart').getContext('2d');
+                const mostBorrowedBooksChart = new Chart(mostBorrowedBooksCtx, {
+                    type: 'bar',
+                    data: {
+                        labels: {{ book_titles|tojson }},
+                        datasets: [{
+                            label: 'Times Borrowed',
+                            data: {{ book_borrow_count|tojson }},
+                            backgroundColor: 'rgba(153, 102, 255, 0.2)',
+                            borderColor: 'rgba(153, 102, 255, 1)',
+                            borderWidth: 1
+                        }]
+                    },
+                    options: {
+                        scales: {
+                            y: {
+                                beginAtZero: true
+                            }
+                        }
+                    }
+                });
+            </script>
+            
         </main>
     </div>
 </div>
