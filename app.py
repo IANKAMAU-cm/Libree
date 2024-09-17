@@ -79,7 +79,7 @@ def register():
     if form.validate_on_submit():
         # Create new admin user
         new_admin = Admin(username=form.username.data)
-        new_admin.set_password(form.password.data, method='pbkdf2:sha256')  # Hash the password
+        new_admin.set_password(form.password.data)  # Hash the password
         db.session.add(new_admin)
         db.session.commit()
         flash('Account created successfully! You can now log in.', 'success')
@@ -519,6 +519,6 @@ def returned_books_report():
 # Create the database tables if they don't exist
 if __name__ == '__main__':
     with app.app_context():
-        #db.drop_all()
-        db.create_all()
+        db.drop_all()
+        #db.create_all()
     app.run(debug=True)
