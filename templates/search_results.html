@@ -13,7 +13,7 @@
         <h3>Books</h3>
         <ul>
             {% for book in book_results %}
-                <li>{{ book.title }} by {{ book.author }} (ISBN: {{ book.isbn }})</li>
+                <li>{{ book.title }} by {{ book.author }} (ISBN: {{ book.isbn }}) (Shelf: {{ book.shelf }})</li>
             {% else %}
                 <li>No books found.</li>
             {% endfor %}
