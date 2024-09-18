@@ -35,6 +35,7 @@ docker-compose up --build
 
 ### Access the application:
 The application will be available at http://localhost:5000. You can access the web interface from your browser.
+To access the admin login via http://localhost:5000/login
 
 ### Stopping the Docker Container
 To stop the containers gracefully, press Ctrl + C in the terminal where docker-compose up is running.
