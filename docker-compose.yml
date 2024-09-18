@@ -3,16 +3,15 @@ version: '3.8'
 services:
   web:
     build: .
-    container_name: flask-app
+    command: gunicorn -b 0.0.0.0:5000 app:app
+    volumes:
+      - .:/app
+      - db_data:/app/instance  # Mount the volume for SQLite database
     ports:
       - "5000:5000"
-    volumes:
-      - ./instance:/app/instance  # Mount the instance directory for persistent storage of the SQLite DB
-      - .:/app  # Mount the entire project directory for easy development and code changes
     environment:
-      - SECRET_KEY=0IGNF840IGNF84  # Your secret key can also be set via an environment variable
-    depends_on:
-      - db
+      - FLASK_APP=app.py
+      - FLASK_ENV=production
 
 volumes:
-  db_data:  # Optional named volume for database (if you move away from SQLite)
+  db_data:
