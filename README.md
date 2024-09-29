@@ -2,7 +2,7 @@
 
 ## Description
 
-The Library Management System is a web-based application designed to manage a library's catalog of books and users. The system allows for librarian registration and login, and facilitates the management of books, including adding, editing, and deleting entries. Users can interact with the system through a web interface that provides functionality for book inventory management and user authentication.
+Libree is a web-based application designed to manage a library's catalog of books and users. The system allows for librarian registration and login, and facilitates the management of books, including adding, editing, and deleting entries. Users can interact with the system through a web interface that provides functionality for book inventory management and user authentication.
 
 ## Features
 
